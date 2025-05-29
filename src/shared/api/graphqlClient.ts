@@ -1,4 +1,4 @@
-const GRAPHQL_URL = 'http://localhost:8080/v1/graphql';
+const GRAPHQL_URL = import.meta.env.VITE_GRAPHQL_URL;
 
 type GraphQLOptions = {
   query: string;
@@ -7,9 +7,10 @@ type GraphQLOptions = {
 
 export const graphqlClient = async <T>(options: GraphQLOptions): Promise<T> => {
   const response = await fetch(GRAPHQL_URL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
+      "x-hasura-admin-secret": import.meta.env.VITE_HASURA_ADMIN_SECRET,
     },
     body: JSON.stringify({
       query: options.query,

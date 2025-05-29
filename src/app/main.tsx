@@ -7,6 +7,7 @@ import { TaskDetailsPage } from "../pages/tasks/TaskDetailsPage";
 import { UsersPage } from "../pages/users/UsersPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { TasksPage } from "../pages/tasks/TasksPage";
+import { LabelsPage } from "../pages/labels/LabelsPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "*",
         element: <NotFoundPage />,
+      },
+      {
+        path: "labels",
+        element: <LabelsPage />,
       },
     ],
   },

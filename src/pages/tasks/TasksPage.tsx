@@ -10,6 +10,7 @@ import type { Label } from "../../entities/label/label.types";
 import { Input } from "../../shared/ui/Input";
 import { Button } from "../../shared/ui/Button";
 import "./TasksPage.scss";
+import { EditTaskForm } from "../../features/edit-task/EditTaskForm";
 
 export const TasksPage: React.FC = () => {
   const [tasks, setTasks] = React.useState<Task[]>([]);
@@ -22,7 +23,8 @@ export const TasksPage: React.FC = () => {
   const [users, setUsers] = React.useState<User[]>([]);
   const [labels, setLabels] = React.useState<Label[]>([]);
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [editTaskId, setEditTaskId] = React.useState<number | null>(null);
 
   React.useEffect(() => {
     const load = async () => {
@@ -66,54 +68,68 @@ export const TasksPage: React.FC = () => {
     setTasks(data);
   };
 
+  const handleUpdate = async () => {
+    const data = await getTasks();
+    setTasks(data);
+  };
+
   if (loading) return <div>Загрузка...</div>;
 
   return (
-    <div>
+    <div className="tasks-page">
       <h2>Задачи</h2>
 
-      <div className="tasks-header">
-        <div className="filters">
-          <Input
-            placeholder="Поиск по заголовку"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      <div className="filters">
+        <Input
+          placeholder="Поиск по заголовку"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
-          <select
-            value={filterAssignee}
-            onChange={(e) => setFilterAssignee(Number(e.target.value) || "")}
-          >
-            <option value="">Все исполнители</option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.first_name} {user.last_name}
-              </option>
-            ))}
-          </select>
+        <select
+          value={filterAssignee}
+          onChange={(e) => setFilterAssignee(Number(e.target.value) || "")}
+        >
+          <option value="">Все исполнители</option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.first_name} {user.last_name}
+            </option>
+          ))}
+        </select>
 
-          <select
-            value={filterLabel}
-            onChange={(e) => setFilterLabel(Number(e.target.value) || "")}
-          >
-            <option value="">Все метки</option>
-            {labels.map((label) => (
-              <option key={label.id} value={label.id}>
-                {label.caption}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <Button onClick={() => setIsModalOpen(true)}>+ Новая задача</Button>
+        <select
+          value={filterLabel}
+          onChange={(e) => setFilterLabel(Number(e.target.value) || "")}
+        >
+          <option value="">Все метки</option>
+          {labels.map((label) => (
+            <option key={label.id} value={label.id}>
+              {label.caption}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <TaskList tasks={applyFilters()} />
+      <Button onClick={() => setIsCreateModalOpen(true)}>+ Новая задача</Button>
 
-      {isModalOpen && (
+      <TaskList
+        tasks={applyFilters()}
+        onEdit={(taskId) => setEditTaskId(taskId)}
+      />
+
+      {isCreateModalOpen && (
         <CreateTaskForm
           onTaskCreated={handleCreate}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsCreateModalOpen(false)}
+        />
+      )}
+
+      {editTaskId && (
+        <EditTaskForm
+          taskId={editTaskId}
+          onTaskUpdated={handleUpdate}
+          onClose={() => setEditTaskId(null)}
         />
       )}
     </div>

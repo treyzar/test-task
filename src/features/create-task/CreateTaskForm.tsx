@@ -4,16 +4,8 @@ import { getUsers } from "../../entities/user/user.api";
 import type { User } from "../../entities/user/user.types";
 import { Input } from "../../shared/ui/Input";
 import { Button } from "../../shared/ui/Button";
+import { STATIC_LABELS } from "./constant";
 import "./CreateTaskForm.scss";
-
-const STATIC_LABELS = [
-  { id: 1, caption: "Срочно", color: "#FF0000" },
-  { id: 2, caption: "Баг", color: "#FF6600" },
-  { id: 3, caption: "Улучшение", color: "#3399FF" },
-  { id: 4, caption: "Документация", color: "#33CC33" },
-  { id: 5, caption: "Дизайн", color: "#9966FF" },
-];
-
 
 const CREATE_TASK_MUTATION = `
   mutation CreateTask($title: String!, $description: String, $assignee_id: Int, $labels: [task_labels_insert_input!]!) {

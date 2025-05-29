@@ -8,6 +8,7 @@ export const App: React.FC = () => {
         <ul>
           <li><Link to="/tasks">Задачи</Link></li>
           <li><Link to="/users">Пользователи</Link></li>
+          <li><Link to='/labels'>Метки</Link></li>
         </ul>
       </nav>
       <main>
